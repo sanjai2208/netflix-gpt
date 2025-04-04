@@ -8,3 +8,5 @@ export const API_OPTIONS = {
     }
   };
   export const IMG_CDN_URL = "http://image.tmdb.org/t/p/w500"
+  export const GPT_KEY = "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"
+  export const DEEP_KEY="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"
