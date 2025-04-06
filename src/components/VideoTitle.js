@@ -1,5 +1,3 @@
-import React from 'react'
-
 const VideoTitle = ({title, overview}) => {
   return (
     <div className="absolute pl-24 pt-[50px] md:pt-[100px] lg:pt-[180px] xl:pt-[230px] 2xl:pt-[400px]  w-screen aspect-video  max-h-[1300px] px-12 text-white bg-gradient-to-r from-black ">
@@ -13,4 +11,4 @@ const VideoTitle = ({title, overview}) => {
   )
 }
 
-export default VideoTitle
+export default VideoTitle;

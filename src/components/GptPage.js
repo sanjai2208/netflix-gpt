@@ -3,7 +3,7 @@ import GptSearchBar from './GptSearchBar'
 import GptMovieSuggestion from './GptMovieSuggestion' 
 const GptPage= () => {
   return (
-    <div className=" bg-black h-full">
+    <div className="bg-black h-full">
      
       <GptSearchBar/>
 

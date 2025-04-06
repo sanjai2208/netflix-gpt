@@ -5,14 +5,17 @@ import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { addUser, removeUser } from "../utils/userSlice";
-import { LOGO } from "../utils/constants";
+import { HOME_IMG, LOGO } from "../utils/constants";
 import { toggleGptSearchView } from "../utils/gptSlice";
+import { toggleMovieInfoView } from "../utils/moviesSlice";
 
 
 const Header = () => {
   const navigate = useNavigate();
   const user = useSelector((store) => store.user);
   const showGptSearch = useSelector(store=>store.gpt.showGptSearch)
+  const showMovieInfoPage = useSelector(store=>store.movies.showMoviePage)
+  
 
   const dispatch = useDispatch();
   const handleSignOut = () => {
@@ -56,15 +59,17 @@ const Header = () => {
   const handleGptSearchClick = () => {
     dispatch(toggleGptSearchView())
   }
-
+const handleMoviePage =() => {
+  dispatch(toggleMovieInfoView())
+}
 
   return (
     <div className="absolute bg-gradient-to-b from-black  z-10 flex justify-between w-screen">
       <img className="w-36" src={LOGO} alt="Logo" />
       {user && (
         <div className="flex p-3 pr-7">
-    
-          <button className="py-2 px-4 m-2 text-white bg-purple-600 rounded-lg hover:scale-x-110 duration-200 hover:bg-purple-700" onClick={handleGptSearchClick}>{showGptSearch ? "Home Page" : "GPT Search"}</button>
+         {showMovieInfoPage ? <button className="py-2 px-4 m-2 text-white bg-purple-600 rounded-lg hover:scale-x-110 duration-200 hover:bg-purple-700" onClick={handleMoviePage}>Home Page</button> : <button className="py-2 px-4 m-2 text-white bg-purple-600 rounded-lg hover:scale-x-110 duration-200 hover:bg-purple-700" onClick={handleGptSearchClick}>{showGptSearch ? "Home Page" : "GPT Search"}</button> } 
+           
           <img
             className=" rounded-lg  w-12 h-12 hover:relative  "
             src={user.photoURL}
