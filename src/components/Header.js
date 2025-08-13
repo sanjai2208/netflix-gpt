@@ -2,81 +2,80 @@ import React, { useEffect } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { addUser, removeUser } from "../utils/userSlice";
-import { HOME_IMG, LOGO } from "../utils/constants";
+import { LOGO } from "../utils/constants";
 import { toggleGptSearchView } from "../utils/gptSlice";
 import { toggleMovieInfoView } from "../utils/moviesSlice";
-
 
 const Header = () => {
   const navigate = useNavigate();
   const user = useSelector((store) => store.user);
-  const showGptSearch = useSelector(store=>store.gpt.showGptSearch)
-  const showMovieInfoPage = useSelector(store=>store.movies.showMoviePage)
-  
+  const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
+  const showMovieInfoPage = useSelector((store) => store.movies.showMoviePage);
 
   const dispatch = useDispatch();
+
   const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        // Sign-out successful.
-      })
-      .catch((error) => {
-        // An error happened.
-      });
+    signOut(auth).catch((error) => {
+      console.error("Sign-out error:", error);
+    });
   };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
         const { uid, email, displayName, photoURL } = user;
-        dispatch(
-          addUser({
-            uid: uid,
-            email: email,
-            displayName: displayName,
-            photoURL: photoURL,
-          })
-        );
-
+        dispatch(addUser({ uid, email, displayName, photoURL }));
         navigate("/browse");
-
-        // ...
       } else {
-        // User is signed out
-
         dispatch(removeUser());
         navigate("/");
-
-        // ...
       }
     });
+
     return () => unsubscribe();
   }, []);
+
   const handleGptSearchClick = () => {
-    dispatch(toggleGptSearchView())
-  }
-const handleMoviePage =() => {
-  dispatch(toggleMovieInfoView())
-}
+    dispatch(toggleGptSearchView());
+  };
+
+  const handleMoviePage = () => {
+    dispatch(toggleMovieInfoView());
+  };
 
   return (
-    <div className="absolute bg-gradient-to-b from-black  z-10 flex justify-between w-screen">
-      <img className="w-36" src={LOGO} alt="Logo" />
+    <div className="absolute bg-gradient-to-b from-black z-10 flex justify-between w-screen items-center px-4 py-2">
+      <img
+        className="w-24 sm:w-36"
+        src={LOGO}
+        alt="Logo"
+      />
       {user && (
-        <div className="flex p-3 pr-7">
-         {showMovieInfoPage ? <button className="py-2 px-4 m-2 text-white bg-purple-600 rounded-lg hover:scale-x-110 duration-200 hover:bg-purple-700" onClick={handleMoviePage}>Home Page</button> : <button className="py-2 px-4 m-2 text-white bg-purple-600 rounded-lg hover:scale-x-110 duration-200 hover:bg-purple-700" onClick={handleGptSearchClick}>{showGptSearch ? "Home Page" : "GPT Search"}</button> } 
-           
+        <div className="flex items-center space-x-2 sm:space-x-4 p-2 sm:pr-7">
+          {showMovieInfoPage ? (
+            <button
+              className="py-1 px-2 sm:py-2 sm:px-4 text-xs sm:text-sm text-white bg-purple-600 rounded-lg hover:scale-x-110 duration-200 hover:bg-purple-700"
+              onClick={handleMoviePage}
+            >
+              Home Page
+            </button>
+          ) : (
+            <button
+              className="py-1.5 px-3 sm:py-2 sm:px-4 text-xs sm:text-sm text-white bg-purple-600 rounded-lg hover:scale-x-110 duration-200 hover:bg-purple-700"
+              onClick={handleGptSearchClick}
+            >
+              {showGptSearch ? "Home Page" : "GPT Search"}
+            </button>
+          )}
           <img
-            className=" rounded-lg  w-12 h-12 hover:relative  "
+            className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg"
             src={user.photoURL}
+            alt="User"
           />
-
           <button
-            className="font-bold text-white pl-3 text-xl"
+            className="font-bold text-xs sm:text-xl text-white  sm:pl-3"
             onClick={handleSignOut}
           >
             Sign Out
@@ -88,3 +87,4 @@ const handleMoviePage =() => {
 };
 
 export default Header;
+
